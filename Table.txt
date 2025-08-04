@@ -1,0 +1,47 @@
+-- Create sample tables
+CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    status VARCHAR(20) CHECK (status IN ('REGULAR', 'SILVER', 'GOLD')),
+    balance DECIMAL(10,2) DEFAULT 0.00,
+    join_date DATE NOT NULL
+);
+
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES customers(customer_id),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'PENDING'
+);
+
+CREATE TABLE order_items (
+    item_id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(order_id),
+    product_name VARCHAR(100) NOT NULL,
+    quantity INTEGER NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL
+);
+
+-- Insert sample data
+INSERT INTO customers (name, email, status, balance, join_date) VALUES
+('John Doe', 'john@example.com', 'GOLD', 500.00, '2020-01-15'),
+('Jane Smith', 'jane@example.com', 'SILVER', 250.00, '2021-03-22'),
+('Bob Johnson', 'bob@example.com', 'REGULAR', 100.00, '2022-11-05');
+
+INSERT INTO orders (customer_id, order_date, total_amount, status) VALUES
+(1, '2023-10-01 09:30:00', 150.00, 'COMPLETED'),
+(1, '2023-10-15 14:45:00', 225.50, 'COMPLETED'),
+(2, '2023-10-10 11:20:00', 75.25, 'COMPLETED'),
+(3, '2023-10-20 16:10:00', 120.00, 'PENDING');
+
+INSERT INTO order_items (order_id, product_name, quantity, unit_price) VALUES
+(1, 'Wireless Mouse', 1, 45.00),
+(1, 'Mechanical Keyboard', 1, 105.00),
+(2, 'Monitor Stand', 1, 35.50),
+(2, 'USB-C Hub', 1, 65.00),
+(2, 'Desk Lamp', 1, 125.00),
+(3, 'Mouse Pad', 1, 15.25),
+(3, 'Screen Cleaner', 2, 30.00),
+(4, 'Bluetooth Speaker', 1, 120.00);
