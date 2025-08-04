@@ -70,3 +70,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+SELECT name, status, balance, 
+       calculate_discount(balance, status) AS potential_discount
+FROM customers;
+
