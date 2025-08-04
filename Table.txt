@@ -75,3 +75,56 @@ SELECT name, status, balance,
        calculate_discount(balance, status) AS potential_discount
 FROM customers;
 
+
+
+
+CREATE OR REPLACE PROCEDURE process_order(
+    p_customer_id INTEGER,
+    p_order_amount DECIMAL(10,2))
+AS $$
+DECLARE
+    v_customer_status VARCHAR(20);
+    v_discount DECIMAL(10,2);
+    v_final_amount DECIMAL(10,2);
+    v_order_id INTEGER;
+BEGIN
+    -- Get customer status
+    SELECT status INTO v_customer_status
+    FROM customers
+    WHERE customer_id = p_customer_id;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Customer not found';
+    END IF;
+
+    -- Calculate discount using our function
+    v_discount := calculate_discount(p_order_amount, v_customer_status);
+    v_final_amount := p_order_amount - v_discount;
+
+    -- Create the order
+    INSERT INTO orders (customer_id, total_amount)
+    VALUES (p_customer_id, v_final_amount)
+    RETURNING order_id INTO v_order_id;
+
+    -- Update customer balance
+    UPDATE customers
+    SET balance = balance - v_final_amount
+    WHERE customer_id = p_customer_id;
+
+    -- Log the transactin
+    RAISE NOTICE 'Order % created for customer %. Discount: %, Final amount: %',
+                 v_order_id, p_customer_id, v_discount, v_final_amount;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CALL process_order(1, 200.00);
+CALL process_order(2, 150.00);
+CALL process_order(3, 80.00);
+
+-- Verify results
+SELECT * FROM orders ORDER BY order_id DESC LIMIT 3;
+SELECT * FROM customers;
+
+
