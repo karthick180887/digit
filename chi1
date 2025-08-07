@@ -1,0 +1,14 @@
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+# Load the data
+df = pd.read_csv('StudentData.csv')
+
+# Create a contingency table
+contingency_table = pd.crosstab(df['course'], df['gender'])
+
+# Perform chi-square test
+chi2, p, dof, ex = chi2_contingency(contingency_table)
+print("Chi2 Statistic:", chi2)
+print("p-value:", p)
+print("Degrees of Freedom:", dof)
