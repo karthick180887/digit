@@ -1,0 +1,21 @@
+Type,NumBedrooms,Price
+Studio,1.0,30000
+Small Apartment,2.0,50000
+Large Apartment,3.0,80000
+Townhouse,4.0,150000
+Family House,5.0,300000
+Large Villa,6.0,600000
+Luxury Villa,7.0,1200000
+Mansion,8.0,2500000
+Estate,9.0,5000000
+Palace,10.0,10000000
+Efficiency,1.5,40000
+Compact Apartment,2.5,70000
+Duplex,3.5,100000
+Townhome,4.5,200000
+Suburban House,5.5,400000
+Country Villa,6.5,800000
+Estate Mansion,7.5,1600000
+Penthouse,8.5,3000000
+Castle,9.5,6000000
+Palatial Estate,10.5,12000000
